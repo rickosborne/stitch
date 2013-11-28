@@ -1,1 +1,4 @@
-console.log('\'Allo \'Allo!');
+(function() {
+  console.log('Rick was here.');
+
+}).call(this);
