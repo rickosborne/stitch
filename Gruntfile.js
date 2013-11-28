@@ -260,6 +260,12 @@ module.exports = function (grunt) {
         'svgmin',
         'htmlmin'
       ]
+    },
+    bump: {
+      options: {
+        tabSize: 2
+      },
+      files: [ "package.json", "bower.json" ]
     }
   });
 
@@ -302,7 +308,8 @@ module.exports = function (grunt) {
     'uglify',
     'copy',
     'rev',
-    'usemin'
+    'usemin',
+    'bump::patch'
   ]);
 
   grunt.registerTask('default', [
@@ -310,4 +317,6 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+  grunt.loadNpmTasks('grunt-bumpx');
 };

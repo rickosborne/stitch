@@ -9,8 +9,16 @@ bail () {
 
 usage () {
     echo "Usage:"
-    echo "  publish version [-a] ['commit message']"
+    echo "  publish [-c|'version'] [-a|-b] ['commit message']"
+    json_version "package.json"
+    echo "Package version:  ${VERSION_NUMBER}"
+    json_version "bower.json"
+    echo "Bower version:    ${VERSION_NUMBER}"
     exit 1
+}
+
+json_version () {
+    VERSION_NUMBER=$(egrep -o -e '"version": "[^"]+"' "$1" | egrep -o -e "\\d+\\.\\d+\\.\\d+")
 }
 
 get_version () {
@@ -21,9 +29,9 @@ get_version () {
 
 ensure_version () {
     local ver="$1"
-    local package_has_version=$(egrep -o -e '"version": "'"$ver"'"' package.json)
+    local package_has_version=$(egrep -o -e '"version": "'"$ver"'-?[0-9]*"' package.json)
     [[ -z "${package_has_version}" ]] && bail "Version mismatch in package.json: $(grep '"version"' package.json)"
-    local bower_has_version=$(egrep -o -e '"version": "'"$ver"'"' bower.json)
+    local bower_has_version=$(egrep -o -e '"version": "'"$ver"'-?[0-9]*"' bower.json)
     [[ -z "${bower_has_version}" ]] && bail "Version mismatch in bower.json: $(grep '"version"' bower.json)"
 }
 
@@ -35,7 +43,11 @@ if [[ -z "$1" || "$1" == "help" || "$1" == "--help" ]] ; then
     usage
 fi
 
-get_version "$1"
+if [[ "$1" == "-c" ]] ; then
+    json_version "package.json"
+else
+    get_version "$1"
+fi
 COMMIT_MESSAGE="$2"
 echo "Version: ${VERSION_NUMBER}"
 
@@ -45,6 +57,12 @@ if [[ "${COMMIT_MESSAGE}" == "-a" ]] ; then
     perl -p -i.verbak -e 's/"version": "[^"]+"/"version": "'"${VERSION_NUMBER}"'"/' bower.json
     rm *.verbak
     git commit -a --amend
+fi
+
+if [[ "${COMMIT_MESSAGE}" == "-b" ]] ; then
+    grunt bump::patch
+    COMMIT_MESSAGE="$3"
+    json_version "package.json"
 fi
 
 ensure_version "${VERSION_NUMBER}"
