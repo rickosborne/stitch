@@ -2,6 +2,8 @@
 
 Image to stich pattern converter
 
+Use stitch here: [rickosborne.github.io/stitch/](http://rickosborne.github.io/stitch/)
+
 ## License
 
 All code written by me (Rick Osborne) is licensed under a Creative Commons
