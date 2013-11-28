@@ -7330,6 +7330,37 @@ td.visible-print {
 .fa-plus-square-o:before {
   content: "\f196";
 }
+#fwdz {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+#fwdz .fwdz-message {
+  font-size: 300%;
+  border-radius: 0.75em;
+  border: 0.375em dashed rgba(127, 127, 127, 0.5);
+  background-color: rgba(224, 224, 224, 0.75);
+  align: center;
+  width: 100%;
+  height: 100%;
+  display: -webkit-flexbox;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  text-align: center;
+}
+#fwdz .fwdz-message div {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  color: rgba(31, 63, 127, 0.5);
+}
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -7338,5 +7369,13 @@ td.visible-print {
 }
 .jumbotron {
   margin: 50px auto 0 auto;
+}
+html,
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 /*# sourceMappingURL=/styles/main.css.map */
