@@ -1,0 +1,62 @@
+#!/bin/bash
+
+VERSION_NUMBER=""
+
+bail () {
+    echo "$@"
+    exit 2
+}
+
+usage () {
+    echo "Usage:"
+    echo "  publish version [-a] ['commit message']"
+    exit 1
+}
+
+get_version () {
+    local ver=$(echo "$1" | egrep -o -e "\\d+\\.\\d+\\.\\d+")
+    [[ -z "${ver}" ]] && usage
+    VERSION_NUMBER="${ver}"
+}
+
+ensure_version () {
+    local ver="$1"
+    local package_has_version=$(egrep -o -e '"version": "'"$ver"'"' package.json)
+    [[ -z "${package_has_version}" ]] && bail "Version mismatch in package.json: $(grep '"version"' package.json)"
+    local bower_has_version=$(egrep -o -e '"version": "'"$ver"'"' bower.json)
+    [[ -z "${bower_has_version}" ]] && bail "Version mismatch in bower.json: $(grep '"version"' bower.json)"
+}
+
+tiptoe () {
+    [[ "$?" != "0" ]] && exit
+}
+
+if [[ -z "$1" || "$1" == "help" || "$1" == "--help" ]] ; then
+    usage
+fi
+
+get_version "$1"
+COMMIT_MESSAGE="$2"
+echo "Version: ${VERSION_NUMBER}"
+
+if [[ "${COMMIT_MESSAGE}" == "-a" ]] ; then
+    COMMIT_MESSAGE="$3"
+    perl -p -i.verbak -e 's/"version": "[^"]+"/"version": "'"${VERSION_NUMBER}"'"/' package.json
+    perl -p -i.verbak -e 's/"version": "[^"]+"/"version": "'"${VERSION_NUMBER}"'"/' bower.json
+    rm *.verbak
+    git commit -a --amend
+fi
+
+ensure_version "${VERSION_NUMBER}"
+
+git checkout dev ; tiptoe
+if [[ -z "${COMMIT_MESSAGE}" ]] ; then
+    git tag -a "v${VERSION_NUMBER}"  ; tiptoe
+else
+    git tag -a "v${VERSION_NUMBER}" -m "${COMMIT_MESSAGE}" ; tiptoe
+fi
+git checkout gh-pages ; tiptoe
+git merge dev ; tiptoe
+git push --all ; tiptoe
+git push --tags ; tiptoe
+git checkout dev

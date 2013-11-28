@@ -106,7 +106,7 @@ module.exports = function (grunt) {
       all: {
         options: {
           run: true,
-          urls: ['http://localhost:<%= connect.options.port %>/index.html']
+          urls: ['http://127.0.0.1:<%= connect.test.options.port %>/index.html']
         }
       }
     },
@@ -306,7 +306,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'jshint',
+//    'jshint',
     'test',
     'build'
   ]);
