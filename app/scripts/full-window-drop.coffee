@@ -2,36 +2,34 @@
 Full Window Drop Zone by Rick Osborne
 ###
 
-class FullWindowDropZone
+class FullWindowDropZone extends window.Evented
 
   @DROP_MESSAGE: 'Drop anywhere'
-
-  @_image_files: (f) =>
-    file for file in f when file.type.indexOf('image') == 0
+  @DROP_ZONE_ID: 'fwdz'
+  @DROP_ZONE_HTML: "<div id=\"#{@DROP_ZONE_ID}\"><div class=\"#{@DROP_ZONE_ID}-message\"><div>#{@DROP_MESSAGE}</div></div>"
 
   @_make_or_find_zone: =>
-    fwdz = $ '#fwdz'
-    return fwdz if fwdz.length
-    fwdz = $('<div id="fwdz"><div class="fwdz-message"><div>' + @DROP_MESSAGE + '</div></div>').appendTo document.body
+    zone = $("##{@DROP_ZONE_ID}")
+    return zone if zone.length
+    $(@DROP_ZONE_HTML).appendTo document.body
 
-  @register: =>
+  register: =>
     $ =>
       document.body.addEventListener 'dragover', (e) =>
         e.preventDefault()
-        @_make_or_find_zone().show()
+        FullWindowDropZone._make_or_find_zone().show()
         false
-      document.body.addEventListener 'dragend', (e) =>
+      document.body.addEventListener 'dragleave', (e) =>
         e.preventDefault()
-        @_make_or_find_zone().hide()
+        FullWindowDropZone._make_or_find_zone().hide()
         false
       document.body.addEventListener 'drop', (e) =>
-        images = @_image_files(e.dataTransfer.files)
-        console.log images
         e.preventDefault()
-        @_make_or_find_zone().hide()
+        @trigger 'drop', e.dataTransfer.files
+        FullWindowDropZone._make_or_find_zone().hide()
         false
       return
     return
 
-
-FullWindowDropZone.register()
+window.FullWindowDropZone = new FullWindowDropZone()
+window.FullWindowDropZone.register()
