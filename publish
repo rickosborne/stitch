@@ -10,10 +10,13 @@ bail () {
 usage () {
     echo "Usage:"
     echo "  publish [-c|'version'] [-a|-b] ['commit message']"
+    echo "    -a [deprecated] Use the shell to set the version"
+    echo "    -b Use grunt to bump the version"
+    echo "    -c Use the version as it is in the JSON files"
     json_version "package.json"
-    echo "Package version:  ${VERSION_NUMBER}"
+    echo "       package.js version:  ${VERSION_NUMBER}"
     json_version "bower.json"
-    echo "Bower version:    ${VERSION_NUMBER}"
+    echo "       bower.js version:    ${VERSION_NUMBER}"
     exit 1
 }
 
@@ -43,11 +46,18 @@ if [[ -z "$1" || "$1" == "help" || "$1" == "--help" ]] ; then
     usage
 fi
 
-if [[ "$1" == "-c" ]] ; then
+if [[ "$1" == "-b" ]] ; then
+    grunt bump::patch
+    COMMIT_MESSAGE="$3"
     json_version "package.json"
 else
-    get_version "$1"
+    if [[ "$1" == "-c" ]] ; then
+        json_version "package.json"
+    else
+        get_version "$1"
+    fi
 fi
+
 COMMIT_MESSAGE="$2"
 echo "Version: ${VERSION_NUMBER}"
 
@@ -57,12 +67,6 @@ if [[ "${COMMIT_MESSAGE}" == "-a" ]] ; then
     perl -p -i.verbak -e 's/"version": "[^"]+"/"version": "'"${VERSION_NUMBER}"'"/' bower.json
     rm *.verbak
     git commit -a --amend
-fi
-
-if [[ "${COMMIT_MESSAGE}" == "-b" ]] ; then
-    grunt bump::patch
-    COMMIT_MESSAGE="$3"
-    json_version "package.json"
 fi
 
 ensure_version "${VERSION_NUMBER}"
