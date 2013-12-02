@@ -4,11 +4,12 @@
 
 
 (function() {
-  var Stitch,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    _this = this;
+  var Stitch, root,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  Stitch = (function() {
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  root.Stitch = Stitch = (function() {
     Stitch.message = {
       NO_IMAGE: 'You must drop an image file, such as a PNG, GIF, JPEG, or SVG.',
       TOO_MANY: 'You dropped more than one image.'
@@ -18,7 +19,7 @@
       this.loadImage = __bind(this.loadImage, this);
       this.onDrop = __bind(this.onDrop, this);
       console.log('Stitch loaded');
-      window.FullWindowDropZone.on('drop', this.onDrop, this);
+      root.FullWindowDropZone.on('drop', this.onDrop, this);
     }
 
     Stitch.prototype.onDrop = function(files) {
@@ -54,9 +55,5 @@
     return Stitch;
 
   })();
-
-  $(function() {
-    return window.Stitch = new Stitch();
-  });
 
 }).call(this);

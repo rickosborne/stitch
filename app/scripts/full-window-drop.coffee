@@ -2,6 +2,8 @@
 Full Window Drop Zone by Rick Osborne
 ###
 
+root = exports ? this
+
 class FullWindowDropZone extends window.Evented
 
   @DROP_MESSAGE: 'Drop anywhere'
@@ -12,6 +14,9 @@ class FullWindowDropZone extends window.Evented
     zone = $("##{@DROP_ZONE_ID}")
     return zone if zone.length
     $(@DROP_ZONE_HTML).appendTo document.body
+
+  constructor: ->
+    @register()
 
   register: =>
     $ =>
@@ -31,5 +36,4 @@ class FullWindowDropZone extends window.Evented
       return
     return
 
-window.FullWindowDropZone = new FullWindowDropZone()
-window.FullWindowDropZone.register()
+root.FullWindowDropZone = new FullWindowDropZone()

@@ -1,2 +1,4 @@
-# Rick was here
-console.log 'Rick was here.'
+root = exports ? this
+
+$ =>
+  root.Stitch = new Stitch()

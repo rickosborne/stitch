@@ -3,7 +3,9 @@
   Based in part on EmberJS's evented.
 ###
 
-window.Evented = class Evented
+root = exports ? this
+
+root.Evented = class Evented
 
   eventedListeners: {}
 

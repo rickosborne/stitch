@@ -2,7 +2,9 @@
   Stitch by Rick Osborne
 ###
 
-class Stitch
+root = exports ? this
+
+root.Stitch = class Stitch
 
   @message:
     NO_IMAGE: 'You must drop an image file, such as a PNG, GIF, JPEG, or SVG.'
@@ -10,7 +12,7 @@ class Stitch
 
   constructor: ->
     console.log 'Stitch loaded'
-    window.FullWindowDropZone.on 'drop', @onDrop, @
+    root.FullWindowDropZone.on 'drop', @onDrop, @
 
   onDrop: (files) =>
     console.log "Stitch.onDrop", files
@@ -24,5 +26,3 @@ class Stitch
   loadImage: (image) =>
     console.log "Stitch.loadImage", image
 
-$ =>
-  window.Stitch = new Stitch()

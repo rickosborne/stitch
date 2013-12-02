@@ -4,19 +4,15 @@ Full Window Drop Zone by Rick Osborne
 
 
 (function() {
-  var FullWindowDropZone, _ref,
+  var FullWindowDropZone, root,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
   FullWindowDropZone = (function(_super) {
     __extends(FullWindowDropZone, _super);
-
-    function FullWindowDropZone() {
-      this.register = __bind(this.register, this);
-      _ref = FullWindowDropZone.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
 
     FullWindowDropZone.DROP_MESSAGE = 'Drop anywhere';
 
@@ -32,6 +28,11 @@ Full Window Drop Zone by Rick Osborne
       }
       return $(FullWindowDropZone.DROP_ZONE_HTML).appendTo(document.body);
     };
+
+    function FullWindowDropZone() {
+      this.register = __bind(this.register, this);
+      this.register();
+    }
 
     FullWindowDropZone.prototype.register = function() {
       var _this = this;
@@ -59,8 +60,6 @@ Full Window Drop Zone by Rick Osborne
 
   }).call(this, window.Evented);
 
-  window.FullWindowDropZone = new FullWindowDropZone();
-
-  window.FullWindowDropZone.register();
+  root.FullWindowDropZone = new FullWindowDropZone();
 
 }).call(this);

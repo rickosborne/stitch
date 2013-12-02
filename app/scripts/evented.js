@@ -5,11 +5,13 @@
 
 
 (function() {
-  var Evented,
+  var Evented, root,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __slice = [].slice;
 
-  window.Evented = Evented = (function() {
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  root.Evented = Evented = (function() {
     function Evented() {
       this.trigger = __bind(this.trigger, this);
       this.on = __bind(this.on, this);
